@@ -1,0 +1,26 @@
+{
+  "name": "nasa-launcher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix client",
+    "install": "npm run install-server && npm run install-client",
+    "server": "npm run watch --prefix server",
+    "client": "npm start --prefix client",
+    "watch": "start npm run server & start npm run client",
+    "test": "npm run test --prefix server && npm run test --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plamenkoyovchev/nasa-launcher.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/plamenkoyovchev/nasa-launcher/issues"
+  },
+  "homepage": "https://github.com/plamenkoyovchev/nasa-launcher#readme"
+}
