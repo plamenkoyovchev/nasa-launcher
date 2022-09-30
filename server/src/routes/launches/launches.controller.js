@@ -10,9 +10,11 @@ function httpCreateLaunch(req, res) {
         const launch = req.body;
         const createdLaunch = createLaunch(launch);
 
-        return res.status(StatusCodes.OK).json(createdLaunch);
+        return res.status(StatusCodes.CREATED).json(createdLaunch);
     } catch (error) {
         console.error(error);
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Error occured during launch creation." });
     }
 }
 
