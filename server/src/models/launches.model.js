@@ -21,6 +21,8 @@ function getAllLaunches() {
 
 function createLaunch(launch) {
     latestFlightNumber++;
+    launch.launchDate = new Date(launch.launchDate);
+
     const newLaunch = {
         ...launch,
         flightNumber: latestFlightNumber,
