@@ -1,10 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
-const { launches } = require('../../models/launches.model');
+const { getAllLaunches } = require('../../models/launches.model');
 
-function getAllLaunches(req, res) {
-    return res.status(StatusCodes.OK).json(Array.from(launches.values()));
+function httpGetAllLaunches(req, res) {
+    return res.status(StatusCodes.OK).json(getAllLaunches());
 }
 
 module.exports = {
-    getAllLaunches
+    httpGetAllLaunches
 };
