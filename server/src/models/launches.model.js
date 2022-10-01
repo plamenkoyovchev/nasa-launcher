@@ -25,7 +25,6 @@ function launchExists(launchId) {
 
 function createLaunch(launch) {
     latestFlightNumber++;
-    launch.launchDate = new Date(launch.launchDate);
 
     const newLaunch = {
         ...launch,

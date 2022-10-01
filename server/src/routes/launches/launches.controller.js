@@ -6,15 +6,27 @@ function httpGetAllLaunches(req, res) {
 }
 
 function httpCreateLaunch(req, res) {
-    try {
-        const launch = req.body;
-        const createdLaunch = createLaunch(launch);
+    const launch = req.body;
+    if (!launch.mission || !launch.launchDate || !launch.target || !launch.rocket) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            error: 'Mission, launch date, target and rocket are required'
+        });
+    }
 
+    launch.launchDate = new Date(launch.launchDate);
+    if (launch.launchDate.toString() === 'Invalid Date') {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            error: 'Invalid launch date'
+        });
+    }
+
+    try {
+        const createdLaunch = createLaunch(launch);
         return res.status(StatusCodes.CREATED).json(createdLaunch);
     } catch (error) {
         console.error(error);
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Error occured during launch creation." });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Error occured during launch creation." });
     }
 }
 
@@ -22,7 +34,7 @@ function httpAbortLaunch(req, res) {
     try {
         const launchId = Number(req.params.id);
         if (!launchExists(launchId)) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Launch does not exist." });
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: "Launch does not exist." });
         }
 
         const abortedLaunch = abortLaunch(launchId);
@@ -30,7 +42,7 @@ function httpAbortLaunch(req, res) {
     } catch (error) {
         console.error(error);
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Error occured during launch abortion." });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Error occured during launch abortion." });
     }
 }
 
