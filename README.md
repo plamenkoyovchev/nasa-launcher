@@ -3,4 +3,4 @@ NASA project rocket launcher app built with node.js (express) and react.js will 
 
 # app diagram
 
-
+![app diagram](diagram.png)
