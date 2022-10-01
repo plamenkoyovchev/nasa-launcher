@@ -1,7 +1,6 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
 async function httpGetPlanets() {
-  // Load planets and return as JSON.
   const response = await fetch(`${API_URL}/planets`);
   const data = await response.json();
 
@@ -9,7 +8,6 @@ async function httpGetPlanets() {
 }
 
 async function httpGetLaunches() {
-  // Load launches, sort by flight number, and return as JSON.
   const response = await fetch(`${API_URL}/launches`);
   const fetchedLaunches = await response.json();
 
@@ -19,7 +17,6 @@ async function httpGetLaunches() {
 }
 
 async function httpSubmitLaunch(launch) {
-  // Submit given launch data to launch system.
   try {
     await fetch(`${API_URL}`, {
       method: 'POST',
@@ -36,8 +33,7 @@ async function httpSubmitLaunch(launch) {
 }
 
 async function httpAbortLaunch(id) {
-  // TODO: Once API is ready.
-  // Delete launch with given ID.
+
 }
 
 export {
