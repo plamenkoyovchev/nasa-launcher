@@ -5,16 +5,40 @@ const app = require('../../app');
 
 const httpRequester = request(app);
 
+const url = '/api/v1/launches';
+
 describe('Test launches GET: endpoint', () => {
     test('should get all launches', async () => {
         await httpRequester
-            .get('/api/launches')
+            .get(url)
             .expect(StatusCodes.OK);
     });
 });
 
 describe('Test launches POST: endpoint', () => {
-    test('should save new launch mission', async () => {
+    const launchData = {
+        mission: 'Kepler Exploration X',
+        rocket: 'Explorer S1',
+        launchDate: new Date('10 October, 2025'),
+        target: 'MARS',
+    };
 
+    const launchDataWithoutDate = {
+        mission: 'Kepler Exploration X',
+        rocket: 'Explorer S1',
+        target: 'MARS',
+    };
+
+    test('should save new launch mission', async () => {
+        const response = await httpRequester
+            .post(url)
+            .send(launchData)
+            .expect(StatusCodes.CREATED);
+
+        expect(response.body).toMatchObject(launchDataWithoutDate);
+
+        const requestDate = new Date(launchData.launchDate).valueOf();
+        const responseDate = new Date(response.body.launchDate).valueOf();
+        expect(requestDate).toEqual(responseDate);
     });
 });
