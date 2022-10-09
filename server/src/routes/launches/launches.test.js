@@ -41,4 +41,27 @@ describe('Test launches POST: endpoint', () => {
         const responseDate = new Date(response.body.launchDate).valueOf();
         expect(requestDate).toEqual(responseDate);
     });
+
+    test('should return bad request requiring missing properties', async () => {
+        const response = await httpRequester
+            .post(url)
+            .send({
+                target: 'Sofia'
+            })
+            .expect(StatusCodes.BAD_REQUEST);
+
+        expect(response.body).toStrictEqual({ error: 'Mission, launch date, target and rocket are required' });
+    });
+
+    test('should return bad request with msg that date is invalid', async () => {
+        const response = await httpRequester
+            .post(url)
+            .send({
+                ...launchDataWithoutDate,
+                launchDate: 'dasijdsaidsjaa'
+            })
+            .expect(StatusCodes.BAD_REQUEST);
+
+        expect(response.body).toStrictEqual({ error: 'Invalid launch date' });
+    });
 });
