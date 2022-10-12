@@ -7,4 +7,4 @@ NASA project rocket launcher app built with node.js (express) and React.js will 
 
 # Database
 
-![database](docs/db.png)
+![database](docs/db.jpeg)
