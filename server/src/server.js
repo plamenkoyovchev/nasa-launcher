@@ -1,5 +1,7 @@
-const http = require('http');
+require('dotenv').config();
 
+const http = require('http');
+const connectToDb = require('./db/connect');
 const app = require('./app');
 
 const { loadPlanetsData } = require('./models/planets.model');
@@ -10,6 +12,9 @@ const server = http.createServer(app);
 
 async function startServer() {
     try {
+        await connectToDb(process.env.MONGO_URI);
+        console.log('Connected to DB...');
+
         await loadPlanetsData();
 
         server.listen(PORT, () => {
