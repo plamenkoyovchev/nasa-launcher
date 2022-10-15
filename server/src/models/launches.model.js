@@ -8,7 +8,7 @@ const launch = {
     rocket: 'Explorer S1',
     launchDate: new Date('10 October, 2025'),
     target: 'MARS',
-    customer: ['NASA', 'Pentagon'],
+    customers: ['NASA', 'Pentagon'],
     upcoming: true,
     success: true
 };
@@ -29,7 +29,7 @@ function createLaunch(launch) {
     const newLaunch = {
         ...launch,
         flightNumber: latestFlightNumber,
-        customer: ['NASA', 'Pentagon'],
+        customers: ['NASA', 'Pentagon'],
         upcoming: true,
         success: true
     };
