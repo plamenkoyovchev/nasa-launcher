@@ -42,6 +42,8 @@ function launchExists(launchId) {
 async function createLaunch(launch) {
     const newFlightNumber = await getNextFlightNumber();
 
+    // TODO: Check whether target exists (planet)
+
     const newLaunch = {
         ...launch,
         flightNumber: newFlightNumber,
