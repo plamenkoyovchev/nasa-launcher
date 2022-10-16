@@ -1,6 +1,8 @@
+const launchesDb = require('./launches.mongo');
+
 const launches = new Map();
 
-let latestFlightNumber = 1;
+const DEFAULT_FLIGHT_NUMBER = 1;
 
 const launch = {
     flightNumber: 1,
@@ -13,28 +15,40 @@ const launch = {
     success: true
 };
 
-launches.set(launch.flightNumber, launch);
+saveLaunch(launch);
 
-function getAllLaunches() {
-    return Array.from(launches.values());
+async function getAllLaunches() {
+    return await launchesDb
+        .find({}, { __v: 0, _id: 0 })
+        .sort('-flightNumber'); // desc
+}
+
+async function getNextFlightNumber() {
+    const launch = await launchesDb
+        .findOne({}, 'flightNumber')
+        .sort('-flightNumber');
+
+    if (!launch) {
+        return DEFAULT_FLIGHT_NUMBER;
+    }
+
+    return launch.flightNumber + 1;
 }
 
 function launchExists(launchId) {
     return launches.has(launchId);
 }
 
-function createLaunch(launch) {
-    latestFlightNumber++;
+async function createLaunch(launch) {
+    const newFlightNumber = await getNextFlightNumber();
 
     const newLaunch = {
         ...launch,
-        flightNumber: latestFlightNumber,
-        customers: ['NASA', 'Pentagon'],
-        upcoming: true,
-        success: true
+        flightNumber: newFlightNumber,
+        customers: ['NASA', 'Pentagon']
     };
 
-    launches.set(latestFlightNumber, newLaunch);
+    await saveLaunch(newLaunch);
 
     return newLaunch;
 }
@@ -45,6 +59,14 @@ function abortLaunch(launchId) {
     launchToAbort.success = false;
 
     return launchToAbort;
+}
+
+async function saveLaunch(launch) {
+    try {
+        await launchesDb.findOneAndUpdate({ flightNumber: launch.flightNumber }, launch, { upsert: true });
+    } catch (error) {
+        throw new Error('An error occured while saving launch to db.');
+    }
 }
 
 module.exports = {
