@@ -1,11 +1,11 @@
 const { StatusCodes } = require('http-status-codes');
 const { getAllLaunches, launchExists, createLaunch, abortLaunch } = require('../../models/launches.model');
 
-function httpGetAllLaunches(req, res) {
-    return res.status(StatusCodes.OK).json(getAllLaunches());
+async function httpGetAllLaunches(req, res) {
+    return res.status(StatusCodes.OK).json(await getAllLaunches());
 }
 
-function httpCreateLaunch(req, res) {
+async function httpCreateLaunch(req, res) {
     const launch = req.body;
     if (!launch.mission || !launch.launchDate || !launch.target || !launch.rocket) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -21,12 +21,12 @@ function httpCreateLaunch(req, res) {
     }
 
     try {
-        const createdLaunch = createLaunch(launch);
+        const createdLaunch = await createLaunch(launch);
         return res.status(StatusCodes.CREATED).json(createdLaunch);
     } catch (error) {
         console.error(error);
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Error occured during launch creation." });
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
     }
 }
 
