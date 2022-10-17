@@ -1,4 +1,5 @@
 const launchesDb = require('./launches.mongo');
+const planetsDb = require('./planets.mongo');
 
 const launches = new Map();
 
@@ -42,7 +43,10 @@ function launchExists(launchId) {
 async function createLaunch(launch) {
     const newFlightNumber = await getNextFlightNumber();
 
-    // TODO: Check whether target exists (planet)
+    const planet = await planetsDb.findOne({ keplerName: launch.target });
+    if (!planet) {
+        throw new Error(`Planet ${launch.target} doesn't exist.`);
+    }
 
     const newLaunch = {
         ...launch,

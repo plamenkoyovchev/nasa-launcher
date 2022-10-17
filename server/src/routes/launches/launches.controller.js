@@ -24,9 +24,7 @@ async function httpCreateLaunch(req, res) {
         const createdLaunch = await createLaunch(launch);
         return res.status(StatusCodes.CREATED).json(createdLaunch);
     } catch (error) {
-        console.error(error);
-
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+        return res.status(StatusCodes.BAD_REQUEST).json({ error });
     }
 }
 
