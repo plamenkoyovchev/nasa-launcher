@@ -32,7 +32,7 @@ async function httpAbortLaunch(req, res) {
     try {
         const launchId = Number(req.params.id);
         const existingLaunch = await launchExists(launchId);
-        if (existingLaunch) {
+        if (!existingLaunch) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: "Launch does not exist." });
         }
 
