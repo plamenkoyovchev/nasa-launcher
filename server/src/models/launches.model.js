@@ -36,8 +36,10 @@ async function getNextFlightNumber() {
     return launch.flightNumber + 1;
 }
 
-function launchExists(launchId) {
-    return launches.has(launchId);
+async function launchExists(launchId) {
+    return await launchesDb.findOne({
+        flightNumber: launchId
+    });
 }
 
 async function createLaunch(launch) {

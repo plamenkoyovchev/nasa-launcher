@@ -28,10 +28,11 @@ async function httpCreateLaunch(req, res) {
     }
 }
 
-function httpAbortLaunch(req, res) {
+async function httpAbortLaunch(req, res) {
     try {
         const launchId = Number(req.params.id);
-        if (!launchExists(launchId)) {
+        const existingLaunch = await launchExists(launchId);
+        if (existingLaunch) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: "Launch does not exist." });
         }
 
