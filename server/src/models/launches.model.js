@@ -61,12 +61,15 @@ async function createLaunch(launch) {
     return newLaunch;
 }
 
-function abortLaunch(launchId) {
-    const launchToAbort = launches.get(launchId);
-    launchToAbort.upcoming = false;
-    launchToAbort.success = false;
+async function abortLaunch(launchId) {
+    const aborted = await launchesDb.updateOne({
+        flightNumber: launchId
+    }, {
+        upcoming: false,
+        success: false
+    });
 
-    return launchToAbort;
+    return aborted.modifiedCount === 1;
 }
 
 async function saveLaunch(launch) {
