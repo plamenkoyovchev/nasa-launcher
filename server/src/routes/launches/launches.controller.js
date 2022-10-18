@@ -36,7 +36,11 @@ async function httpAbortLaunch(req, res) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: "Launch does not exist." });
         }
 
-        const abortedLaunch = abortLaunch(launchId);
+        const abortedLaunch = await abortLaunch(launchId);
+        if (!abortedLaunch) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: "Unable to abort launch." });
+        }
+
         return res.status(StatusCodes.OK).json(abortLaunch);
     } catch (error) {
         console.error(error);
