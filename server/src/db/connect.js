@@ -8,7 +8,18 @@ const connectToDb = (uri) => {
     }
 };
 
+const closeDbConnection = () => {
+    try {
+        mongoose.connection.close();
+    } catch (error) {
+        throw error;
+    }
+};
+
 mongoose.connection.once('open', () => console.log('Connected to MongoDB!'));
 mongoose.connection.on('error', (err) => console.error(err));
 
-module.exports = connectToDb;
+module.exports = {
+    connectToDb,
+    closeDbConnection
+};
