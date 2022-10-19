@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const http = require('http');
-const connectToDb = require('./db/connect');
+const { connectToDb } = require('./db/connect');
 const app = require('./app');
 
 const { loadPlanetsData } = require('./models/planets.model');
