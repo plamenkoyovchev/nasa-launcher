@@ -13,8 +13,6 @@ const server = http.createServer(app);
 async function startServer() {
     try {
         await connectToDb(process.env.MONGO_URI);
-        console.log('Connected to DB...');
-
         await loadPlanetsData();
 
         server.listen(PORT, () => {

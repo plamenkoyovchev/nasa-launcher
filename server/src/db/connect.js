@@ -8,4 +8,7 @@ const connectToDb = (uri) => {
     }
 };
 
+mongoose.connection.once('open', () => console.log('Connected to MongoDB!'));
+mongoose.connection.on('error', (err) => console.error(err));
+
 module.exports = connectToDb;
