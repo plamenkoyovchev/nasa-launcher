@@ -44,7 +44,16 @@ async function savePlanet(planet) {
     }
 }
 
+async function clearAllPlanets() {
+    try {
+        await planetsDb.deleteMany({});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 module.exports = {
     loadPlanetsData,
     getAllPlanets,
+    clearAllPlanets
 };
