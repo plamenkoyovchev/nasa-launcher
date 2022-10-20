@@ -80,9 +80,18 @@ async function saveLaunch(launch) {
     }
 }
 
+async function clearAllLaunches() {
+    try {
+        await launchesDb.deleteMany({});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 module.exports = {
     getAllLaunches,
     launchExists,
     createLaunch,
-    abortLaunch
+    abortLaunch,
+    clearAllLaunches
 };
