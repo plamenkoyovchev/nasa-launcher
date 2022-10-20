@@ -10,13 +10,15 @@ const connectToDb = (uri) => {
 
 const closeDbConnection = () => {
     try {
-        mongoose.connection.close();
+        return mongoose.disconnect();
     } catch (error) {
         throw error;
     }
 };
 
 mongoose.connection.once('open', () => console.log('Connected to MongoDB!'));
+mongoose.connection.once('close', () => console.log('Disconnected from MongoDB!'));
+
 mongoose.connection.on('error', (err) => console.error(err));
 
 module.exports = {
