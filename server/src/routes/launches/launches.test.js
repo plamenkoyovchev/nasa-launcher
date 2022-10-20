@@ -1,9 +1,12 @@
 require('dotenv').config();
-const { connectToDb, closeDbConnection } = require('../../db/connect');
+const { connectToDb, closeDbConnection } = require('../../db/mongo-connection-provider');
 const { StatusCodes } = require('http-status-codes');
 
 const request = require('supertest');
 const app = require('../../app');
+
+const { loadPlanetsData, clearAllPlanets } = require('../../models/planets.model');
+const { clearAllLaunches } = require('../../models/launches.model');
 
 const httpRequester = request(app);
 
@@ -11,7 +14,13 @@ const url = '/api/v1/launches';
 
 describe('Launches API', () => {
     beforeAll(async () => {
-        await connectToDb(process.env.MONGO_URI);
+        await connectToDb(process.env.MONGO_TESTS_URI);
+        await loadPlanetsData();
+    });
+
+    afterAll(async () => {
+        await cleanUp();
+        await closeDbConnection();
     });
 
     describe('Test launches GET: endpoint', () => {
@@ -27,13 +36,13 @@ describe('Launches API', () => {
             mission: 'Kepler Exploration X',
             rocket: 'Explorer S1',
             launchDate: new Date('10 October, 2025'),
-            target: 'MARS',
+            target: 'Kepler-62 f',
         };
 
         const launchDataWithoutDate = {
             mission: 'Kepler Exploration X',
             rocket: 'Explorer S1',
-            target: 'MARS',
+            target: 'Kepler-62 f',
         };
 
         test('should save new launch mission', async () => {
@@ -72,8 +81,9 @@ describe('Launches API', () => {
             expect(response.body).toStrictEqual({ error: 'Invalid launch date' });
         });
     });
-
-    afterAll(() => {
-        closeDbConnection();
-    });
 });
+
+async function cleanUp() {
+    await clearAllPlanets();
+    await clearAllLaunches();
+}
