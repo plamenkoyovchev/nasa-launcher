@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 const launchesDb = require('./launches.mongo');
 const planetsDb = require('./planets.mongo');
 
@@ -80,6 +82,44 @@ async function saveLaunch(launch) {
     }
 }
 
+const SPACE_X_API_URL = 'https://api.spacexdata.com/v4/launches/query';
+async function loadLaunchesHistory() {
+    const { data: { docs: launchesHistory } } = await axios.post(SPACE_X_API_URL, {
+        query: {},
+        options: {
+            populate: [
+                {
+                    path: 'rocket',
+                    select: {
+                        name: 1
+                    }
+                },
+                {
+                    path: 'payloads',
+                    select: {
+                        customers: 1
+                    }
+                }
+            ]
+        }
+    });
+
+    const launchesHistoryForInsert = launchesHistory.map((launchDoc) => {
+        const payloads = launchDoc['payloads'];
+        const customers = payloads.flatMap((payload) => payload.customers);
+
+        return {
+            flightNumber: launchDoc['flight_number'],
+            mission: launchDoc.name,
+            rocket: launchDoc.rocket.name,
+            launchDate: launchDoc['date_local'],
+            upcoming: launchDoc.upcoming,
+            success: launchDoc.success,
+            customers
+        };
+    });
+}
+
 async function clearAllLaunches() {
     try {
         await launchesDb.deleteMany({});
@@ -93,5 +133,6 @@ module.exports = {
     launchExists,
     createLaunch,
     abortLaunch,
+    loadLaunchesHistory,
     clearAllLaunches
 };
