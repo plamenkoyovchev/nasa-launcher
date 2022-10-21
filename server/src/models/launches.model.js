@@ -3,8 +3,6 @@ const axios = require('axios');
 const launchesDb = require('./launches.mongo');
 const planetsDb = require('./planets.mongo');
 
-const launches = new Map();
-
 const DEFAULT_FLIGHT_NUMBER = 1;
 
 async function getAllLaunches() {
