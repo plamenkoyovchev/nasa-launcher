@@ -87,6 +87,7 @@ async function loadLaunchesHistory() {
     const { data: { docs: launchesHistory } } = await axios.post(SPACE_X_API_URL, {
         query: {},
         options: {
+            pagination: false,
             populate: [
                 {
                     path: 'rocket',
