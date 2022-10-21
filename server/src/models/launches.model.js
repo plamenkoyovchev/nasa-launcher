@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { StatusCodes } = require('http-status-codes');
 
 const launchesDb = require('./launches.mongo');
 const planetsDb = require('./planets.mongo');
@@ -81,7 +82,7 @@ async function loadLaunchesHistory() {
 
 const SPACE_X_API_URL = 'https://api.spacexdata.com/v4/launches/query';
 async function fetchLaunchesHistory() {
-    const { data: { docs: launchesHistory } } = await axios.post(SPACE_X_API_URL, {
+    const response = await axios.post(SPACE_X_API_URL, {
         query: {},
         options: {
             pagination: false,
@@ -102,7 +103,12 @@ async function fetchLaunchesHistory() {
         }
     });
 
-    return launchesHistory.map((launchDoc) => {
+    if (response.statusCode !== StatusCodes.OK) {
+        console.error('Unable to download launches historycal data!');
+        return [];
+    }
+
+    return response.data.docs.map((launchDoc) => {
         const payloads = launchDoc['payloads'];
         const customers = payloads.flatMap((payload) => payload.customers);
 
