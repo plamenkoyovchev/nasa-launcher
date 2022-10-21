@@ -7,19 +7,6 @@ const launches = new Map();
 
 const DEFAULT_FLIGHT_NUMBER = 1;
 
-const launch = {
-    flightNumber: 1,
-    mission: 'Kepler Exploration X',
-    rocket: 'Explorer S1',
-    launchDate: new Date('10 October, 2025'),
-    target: 'MARS',
-    customers: ['NASA', 'Pentagon'],
-    upcoming: true,
-    success: true
-};
-
-saveLaunch(launch);
-
 async function getAllLaunches() {
     return await launchesDb
         .find({}, { __v: 0, _id: 0 })
@@ -82,8 +69,20 @@ async function saveLaunch(launch) {
     }
 }
 
-const SPACE_X_API_URL = 'https://api.spacexdata.com/v4/launches/query';
 async function loadLaunchesHistory() {
+
+    const launchExists = await launchesDb.findOne({ flightNumber: 1 });
+    if (launchExists) {
+        return;
+    }
+
+    const history = await fetchLaunchesHistory();
+
+    await launchesDb.insertMany(history, (error) => console.error(error));
+}
+
+const SPACE_X_API_URL = 'https://api.spacexdata.com/v4/launches/query';
+async function fetchLaunchesHistory() {
     const { data: { docs: launchesHistory } } = await axios.post(SPACE_X_API_URL, {
         query: {},
         options: {
@@ -105,7 +104,7 @@ async function loadLaunchesHistory() {
         }
     });
 
-    const launchesHistoryForInsert = launchesHistory.map((launchDoc) => {
+    return launchesHistory.map((launchDoc) => {
         const payloads = launchDoc['payloads'];
         const customers = payloads.flatMap((payload) => payload.customers);
 
@@ -114,8 +113,8 @@ async function loadLaunchesHistory() {
             mission: launchDoc.name,
             rocket: launchDoc.rocket.name,
             launchDate: launchDoc['date_local'],
-            upcoming: launchDoc.upcoming,
-            success: launchDoc.success,
+            upcoming: launchDoc.upcoming ?? false,
+            success: launchDoc.success ?? false,
             customers
         };
     });

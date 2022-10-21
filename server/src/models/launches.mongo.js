@@ -20,8 +20,7 @@ const launchSchema = new mongoose.Schema({
         default: Date.now
     },
     target: {
-        type: String,
-        required: [true, 'target is required']
+        type: String
     },
     customers: [String],
     upcoming: {
