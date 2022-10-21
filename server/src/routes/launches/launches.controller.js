@@ -1,8 +1,12 @@
 const { StatusCodes } = require('http-status-codes');
 const { getAllLaunches, launchExists, createLaunch, abortLaunch } = require('../../models/launches.model');
+const { getPagination } = require('../../utils/query');
 
 async function httpGetAllLaunches(req, res) {
-    return res.status(StatusCodes.OK).json(await getAllLaunches());
+    const { skip, limit } = getPagination(req.query);
+    const result = await getAllLaunches(skip, limit);
+
+    return res.status(StatusCodes.OK).json(result);
 }
 
 async function httpCreateLaunch(req, res) {
