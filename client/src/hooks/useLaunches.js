@@ -6,14 +6,14 @@ import {
   httpAbortLaunch,
 } from './requests';
 
-function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
+function useLaunches(onSuccessSound, onAbortSound, onFailureSound, showHistory) {
   const [launches, saveLaunches] = useState([]);
   const [isPendingLaunch, setPendingLaunch] = useState(false);
 
   const getLaunches = useCallback(async () => {
-    const fetchedLaunches = await httpGetLaunches();
+    const fetchedLaunches = await httpGetLaunches(showHistory);
     saveLaunches(fetchedLaunches);
-  }, []);
+  }, [showHistory]);
 
   useEffect(() => {
     getLaunches();

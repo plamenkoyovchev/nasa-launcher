@@ -7,8 +7,13 @@ async function httpGetPlanets() {
   return data;
 }
 
-async function httpGetLaunches() {
-  const response = await fetch(`${API_URL}/launches`);
+async function httpGetLaunches(showHistory) {
+  let url = `${API_URL}/launches`;
+  if (showHistory) {
+    url = `${url}?showHistory=${showHistory}`;
+  }
+
+  const response = await fetch(url);
   const fetchedLaunches = await response.json();
 
   return fetchedLaunches.sort((a, b) => {
