@@ -6,9 +6,11 @@ const planetsDb = require('./planets.mongo');
 
 const DEFAULT_FLIGHT_NUMBER = 1;
 
-async function getAllLaunches(skip, limit) {
+async function getAllLaunches(skip, limit, showHistory) {
+    const filter = showHistory ? { upcoming: false } : {};
+
     return await launchesDb
-        .find({}, { __v: 0, _id: 0 })
+        .find(filter, { __v: 0, _id: 0 })
         .skip(skip)
         .limit(limit);
 }

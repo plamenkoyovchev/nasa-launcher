@@ -4,7 +4,7 @@ const { getPagination } = require('../../utils/query');
 
 async function httpGetAllLaunches(req, res) {
     const { skip, limit } = getPagination(req.query);
-    const result = await getAllLaunches(skip, limit);
+    const result = await getAllLaunches(skip, limit, req.query.showHistory);
 
     return res.status(StatusCodes.OK).json(result);
 }
