@@ -19,7 +19,7 @@ async function getAllLaunches(skip, limit, showHistory) {
 async function getNextFlightNumber() {
     const launch = await launchesDb
         .findOne({}, 'flightNumber')
-        .sort('-flightNumber');
+        .sort({ flightNumber: -1 });
 
     if (!launch) {
         return DEFAULT_FLIGHT_NUMBER;
