@@ -11,6 +11,7 @@ async function getAllLaunches(skip, limit, showHistory) {
 
     return await launchesDb
         .find(filter, { __v: 0, _id: 0 })
+        .sort({ flightNumber: -1 })
         .skip(skip)
         .limit(limit);
 }
